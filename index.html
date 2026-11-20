@@ -293,6 +293,151 @@
 
     main { padding: 28px 0 64px; }
 
+    .tab-nav {
+      grid-column: 2;
+      justify-self: center;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 253, .72);
+    }
+
+    .tab-button {
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .tab-button[aria-selected="true"] {
+      background: var(--pink);
+      color: var(--lime);
+    }
+
+    .view-section[hidden] { display: none; }
+
+    .gallery-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .gallery-heading h1 {
+      max-width: none;
+      font-size: clamp(28px, 4vw, 44px);
+    }
+
+    .gallery-heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .upload-button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--pink);
+      color: var(--lime);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .upload-button:focus-visible,
+    .gallery-card:focus-visible,
+    .modal-close:focus-visible,
+    .tab-button:focus-visible {
+      outline: 3px solid var(--lime);
+      outline-offset: 3px;
+    }
+
+    #gallery-input { display: none; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .gallery-card {
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      background: var(--card);
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+
+    .gallery-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      transition: transform .25s ease;
+    }
+
+    .gallery-card:hover img { transform: scale(1.02); }
+
+    .gallery-empty {
+      grid-column: 1 / -1;
+      padding: 54px 20px;
+      border: 1px dashed #e8b9d0;
+      border-radius: 22px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .photo-modal {
+      width: min(92vw, 980px);
+      max-height: 92vh;
+      padding: 0;
+      border: 0;
+      border-radius: 20px;
+      background: #1f1720;
+      overflow: visible;
+    }
+
+    .photo-modal::backdrop {
+      background: rgba(66, 38, 56, .78);
+      backdrop-filter: blur(6px);
+    }
+
+    .photo-modal img {
+      display: block;
+      width: 100%;
+      max-height: 88vh;
+      border-radius: 20px;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 250, 253, .92);
+      color: var(--ink);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
     .cards {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -506,7 +651,19 @@
         -webkit-overflow-scrolling: touch;
       }
       .filter-button { flex: 0 0 auto; }
+      .tab-nav { grid-column: 2; }
+      .tab-button { padding: 7px 9px; }
       main { padding: 19px 0 42px; }
+      .gallery-heading {
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .gallery-heading h1 { font-size: 30px; }
+      .gallery-heading p { font-size: 12px; }
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .gallery-card { border-radius: 13px; }
+      .photo-modal { width: calc(100vw - 24px); border-radius: 14px; }
+      .photo-modal img { border-radius: 14px; }
       .cards { grid-template-columns: 1fr; gap: 14px; }
       .person-card { border-radius: 23px; }
       .person-topline {
@@ -538,6 +695,10 @@
   <header class="masthead">
     <nav class="site-nav page-shell" aria-label="주요 메뉴">
       <a class="brand" href="#" aria-label="페이지 맨 위로">PARANG<sup>®</sup></a>
+      <div class="tab-nav" role="tablist" aria-label="페이지 보기">
+        <button class="tab-button" id="people-tab" type="button" role="tab" aria-selected="true" aria-controls="people-view">PEOPLE</button>
+        <button class="tab-button" id="gallery-tab" type="button" role="tab" aria-selected="false" aria-controls="gallery-view">GALLERY</button>
+      </div>
       <a class="nav-link" href="#cards"><span id="nav-count">19</span><span>PEOPLE</span></a>
     </nav>
     <div class="page-shell masthead-inner">
@@ -588,7 +749,7 @@
     </div>
   </header>
 
-  <section class="filter-section" id="keywords" aria-labelledby="filter-title">
+  <section class="filter-section view-section" id="keywords" aria-labelledby="filter-title">
     <div class="page-shell">
       <div class="filter-heading">
         <h2 id="filter-title">관심 키워드</h2>
@@ -598,9 +759,30 @@
     </div>
   </section>
 
-  <main class="page-shell">
-    <div class="cards" id="cards"></div>
+  <main>
+    <section class="page-shell view-section" id="people-view" role="tabpanel" aria-labelledby="people-tab">
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <section class="page-shell view-section" id="gallery-view" role="tabpanel" aria-labelledby="gallery-tab" hidden>
+      <div class="gallery-heading">
+        <div>
+          <h1>오늘의 순간</h1>
+          <p id="gallery-description">애매한 연말모임에서 찍은 사진을 모아두는 공간입니다.</p>
+        </div>
+        <label class="upload-button" for="gallery-input">사진 추가</label>
+        <input id="gallery-input" type="file" accept="image/*" multiple>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <p class="gallery-empty">아직 공유된 사진이 없습니다.<br>위의 사진 추가 버튼을 눌러 사진을 올려주세요.</p>
+      </div>
+    </section>
   </main>
+
+  <dialog class="photo-modal" id="photo-modal" aria-label="사진 크게 보기">
+    <button class="modal-close" id="modal-close" type="button" aria-label="닫기">×</button>
+    <img id="modal-image" alt="">
+  </dialog>
 
   <footer class="page-shell">A gathering of people, words, and little connections.</footer>
 
@@ -628,6 +810,16 @@
     const filtersElement = document.querySelector("#filters");
     const countElement = document.querySelector("#result-count");
     const navCountElement = document.querySelector("#nav-count");
+    const peopleTab = document.querySelector("#people-tab");
+    const galleryTab = document.querySelector("#gallery-tab");
+    const peopleView = document.querySelector("#people-view");
+    const galleryView = document.querySelector("#gallery-view");
+    const keywordsSection = document.querySelector("#keywords");
+    const galleryInput = document.querySelector("#gallery-input");
+    const galleryGrid = document.querySelector("#gallery-grid");
+    const photoModal = document.querySelector("#photo-modal");
+    const modalImage = document.querySelector("#modal-image");
+    const modalClose = document.querySelector("#modal-close");
     let activeKeyword = "";
 
     function makeSocialLinks(raw) {
@@ -773,6 +965,88 @@
       return card;
     }
 
+    function setActiveTab(tabName) {
+      const showPeople = tabName === "people";
+      peopleTab.setAttribute("aria-selected", String(showPeople));
+      galleryTab.setAttribute("aria-selected", String(!showPeople));
+      peopleView.hidden = !showPeople;
+      galleryView.hidden = showPeople;
+      keywordsSection.hidden = !showPeople;
+      window.history.replaceState(null, "", showPeople ? "#people" : "#gallery");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    peopleTab.addEventListener("click", () => setActiveTab("people"));
+    galleryTab.addEventListener("click", () => setActiveTab("gallery"));
+
+    function addFolderPhoto(photo) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "gallery-card";
+      button.setAttribute("aria-label", `${photo.name} 크게 보기`);
+
+      const image = document.createElement("img");
+      image.src = photo.thumb;
+      image.alt = photo.name;
+      image.loading = "lazy";
+      button.append(image);
+      button.addEventListener("click", () => {
+        modalImage.src = photo.preview;
+        modalImage.alt = photo.name;
+        photoModal.showModal();
+      });
+      galleryGrid.append(button);
+    }
+
+    async function loadFolderGallery() {
+      try {
+        const response = await fetch("gallery/manifest.json");
+        if (!response.ok) throw new Error(`gallery manifest: ${response.status}`);
+        const photos = await response.json();
+        if (photos.length === 0) return;
+        galleryGrid.replaceChildren();
+        photos.forEach(addFolderPhoto);
+        document.querySelector("#gallery-description").textContent =
+          `애매한 연말모임의 순간 ${photos.length}장을 모아두었습니다.`;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadFolderGallery();
+
+    galleryInput.addEventListener("change", () => {
+      const images = [...galleryInput.files].filter((file) => file.type.startsWith("image/"));
+      if (!images.length) return;
+
+      galleryGrid.querySelector(".gallery-empty")?.remove();
+      for (const file of images) {
+        const url = URL.createObjectURL(file);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "gallery-card";
+        button.setAttribute("aria-label", `${file.name} 크게 보기`);
+
+        const image = document.createElement("img");
+        image.src = url;
+        image.alt = file.name;
+        image.loading = "lazy";
+        button.append(image);
+        button.addEventListener("click", () => {
+          modalImage.src = url;
+          modalImage.alt = file.name;
+          photoModal.showModal();
+        });
+        galleryGrid.append(button);
+      }
+      galleryInput.value = "";
+    });
+
+    modalClose.addEventListener("click", () => photoModal.close());
+    photoModal.addEventListener("click", (event) => {
+      if (event.target === photoModal) photoModal.close();
+    });
+
     function renderFilters() {
       const counts = new Map();
       for (const person of PEOPLE) {
@@ -821,6 +1095,7 @@
 
     renderFilters();
     render();
+    if (window.location.hash === "#gallery") setActiveTab("gallery");
   </script>
 </body>
 </html>
