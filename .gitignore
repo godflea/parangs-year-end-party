@@ -1,0 +1,22 @@
+.DS_Store
+
+# Keep only optimized gallery assets in Git
+gallery/*.jpg
+gallery/*.jpeg
+gallery/*.png
+gallery/*.gif
+gallery/*.webp
+gallery/*.heic
+gallery/*.heif
+gallery/*.JPG
+gallery/*.JPEG
+gallery/*.PNG
+gallery/*.GIF
+gallery/*.WEBP
+gallery/*.HEIC
+gallery/*.HEIF
+
+# Private / working files
+*.csv
+*.pdf
+스크린샷*
